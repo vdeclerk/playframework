@@ -24,6 +24,22 @@ object FormatSpec extends Specification {
     }
   }
 
+  "A javaTimeLocalDate format" should {
+    "return a LocalDate" in {
+      val data = Map("date" -> "2016-01-18")
+
+      val format = Formats.javaTimeLocalDateFormat
+      format.bind("date", data).right.get should equalTo(java.time.LocalDate.of(2016, 1, 18))
+      format.unbind("date", java.time.LocalDate.of(2016, 1, 18)) should equalTo(data)
+
+      val data2 = Map("date" -> "18/01/2016")
+
+      val format2 = Formats.javaTimeLocalDateFormat("dd/MM/yyyy")
+      format2.bind("date", data2).right.get should equalTo(java.time.LocalDate.of(2016, 1, 18))
+      format2.unbind("date", java.time.LocalDate.of(2016, 1, 18)) should equalTo(data2)
+    }
+  }
+
   "A simple mapping of BigDecimalFormat" should {
     "return a BigDecimal" in {
       Form("value" -> bigDecimal).bind(Map("value" -> "10.23")).fold(
